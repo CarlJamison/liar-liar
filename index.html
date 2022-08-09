@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0">
+<canvas id="myCanvas" width="1024" height="640"></canvas>
+<script>
+window.onload=function(){var f=document.getElementById("myCanvas");f.width=window.innerWidth-10,f.height=window.innerHeight-10;for(var d=f.getContext("2d"),g=[],a=0;a<6;a++)g[a]=.5>Math.random()?1:0;for(var b=Math.floor(window.innerWidth/14),h=Math.floor(window.innerHeight/2),a=0;a<6;a++){var c=Object.assign([],g);c[a]=!c[a];var e=4*c[0]+2*c[1]+c[2]+""+(4*c[3]+2*c[4]+c[5]);e="0"==e[0]?e[1]:e,d.fillStyle=g[a]?"red":"blue",d.fillRect(b+2*a*b,h-b,2*b,2*b),d.font=b+"px Arial",d.fillStyle="black",d.fillText(e,1.5*b+2*a*b,h+b/2)}}
+</script>
+</body>
+</html>

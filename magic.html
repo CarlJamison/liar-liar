@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<body style="margin:0">
+<canvas id="myCanvas" width="1024" height="640"></canvas>
+<script>
+window.onload = function init(){
+	var canvas = document.getElementById("myCanvas");
+	canvas.width = window.innerWidth - 10;
+	canvas.height = window.innerHeight - 10;
+
+    var ctx = canvas.getContext("2d");
+	var boolArray = [];
+	for(var i = 0; i < 6; i++){
+		boolArray[i] = Math.random() < 0.5 ? 1 : 0;
+	}
+
+	var interval = Math.floor(window.innerWidth / 14);
+	var mid = Math.floor(window.innerHeight / 2);
+
+	for(var i = 0; i < 6; i++){
+		var lie = Object.assign([], boolArray);
+		lie[i] = !lie[i];
+
+		var answer = (lie[0] * 4 + lie[1] * 2 + lie[2]) + '' + (lie[3] * 4 + lie[4] * 2 + lie[5]);
+		answer = answer[0] == '0' ? answer[1] : answer;
+		
+		ctx.fillStyle = boolArray[i] ? "red" : "blue";
+		ctx.fillRect(interval + (2 * i * interval), mid - interval, 2 * interval, 2 * interval);
+		ctx.font = interval + "px Arial";
+		ctx.fillStyle = "black";
+		ctx.fillText(answer, (interval * 1.5) + (2 * i * interval), mid + (interval / 2));
+	}
+}
+</script>
+</body>
+</html>
