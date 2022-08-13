@@ -4,47 +4,53 @@
 <canvas id="myCanvas" width="1024" height="640"></canvas>
 <script>
 	const length = 20;
+    var showAll = false;
 	var canvas = document.getElementById("myCanvas");
 	canvas.width = window.innerWidth - 20;
 	
     var ctx = canvas.getContext("2d");
-
 	var interval = Math.floor(canvas.width / 14);
-	canvas.height = interval * (3 * length + 1);
-	var mid = Math.floor(canvas.height / 2);
+	var mid = Math.floor(window.innerHeight / 2 / interval - 1);
 
-	var numList = Array.from({length: 64}, (e, i) => i);
-	numList = numList.sort((a, b) => ((a + 7) % 17) - ((b + 11) % 17));
-
-	for(var j = 0; j < length; j++){
-		//var boolArray = Array.from({length: 6}, () => Math.round(Math.random()));
-		var boolArray = [];//Array.from({length: 6}, (e, i) => (j % Math.pow(2, i)) ? 1 : 0);
-
-		var val = numList[j];
-		for(var k = 5; k >= 0; k--){
-			if(val >= Math.pow(2, k)){
-				boolArray.push(1)
-				val -= Math.pow(2, k);
-			}else{
-				boolArray.push(0)
-			}
-		}
-
-		for(var i = 0; i < 6; i++){
-			var lie = boolArray.slice();
-			lie[i] = !lie[i];
-
-			var answer = (lie[0] * 4 + lie[1] * 2 + lie[2]) + '' + (lie[3] * 4 + lie[4] * 2 + lie[5]);
-			answer = answer[0] == '0' ? answer[1] : answer;
-			
-			ctx.fillStyle = boolArray[i] ? "red" : "blue";
-			ctx.fillRect(interval + (2 * i * interval), (3 * j + 1) * interval, 2 * interval, 2 * interval);
-			ctx.font = interval + "px Arial";
-			ctx.fillStyle = "black";
-			ctx.fillText(answer, (interval * 1.5) + (2 * i * interval), (3 * j + 2.4) * interval);
-		}
-	}
+    var numList = Array.from({length: 62}, (e, i) => i + 1)
+        .sort((a, b) => Math.sin(a * 1000) - Math.sin(b * 1000))
+        .slice(0, length);
 	
+	canvas.addEventListener("mousedown", onClick);
+    onClick()
+    
+    function onClick(event){
+        this.showAll = !this.showAll;
+
+        if(this.showAll){
+            canvas.height = interval * (3 * length + 1);
+            numList.forEach((e, j) => renderSingle(j * 3 + 1, j));
+        }else{
+            canvas.height = window.innerHeight - 20;
+            var rect = canvas.getBoundingClientRect();
+            var y = event.pageY - rect.top;
+            renderSingle(mid, Math.floor(y / interval / 3));
+        }
+    }
+
+    function renderSingle(level, j){
+        var boolArray = Array.from({length: 6}, (e, i) => 
+            (numList[j] % Math.pow(2, i + 1)) >= Math.pow(2, i) ? 1 : 0);
+
+        for(var i = 0; i < 6; i++){
+            var lie = boolArray.slice();
+            lie[i] = !lie[i];
+
+            var answer = (lie[0] * 4 + lie[1] * 2 + lie[2]) + '' + (lie[3] * 4 + lie[4] * 2 + lie[5]);
+            answer = answer[0] == '0' ? answer[1] : answer;
+            
+            ctx.fillStyle = boolArray[i] ? "red" : "blue";
+            ctx.fillRect(interval + (2 * i * interval), level * interval, 2 * interval, 2 * interval);
+            ctx.fillStyle = "black";
+            ctx.font = interval + "px Arial";
+            ctx.fillText(answer, (interval * 1.5) + (2 * i * interval), (level + 1.4) * interval);
+        }
+    }
 </script>
 </body>
 </html>
